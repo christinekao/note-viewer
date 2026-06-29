@@ -25,15 +25,14 @@ Kao_oaK 個人知識庫的互動式 note viewer。讀取 Obsidian vault，以 Vi
 ```
 
 ## 資料來源
-- Vault 路徑：`D:\OneDrive - TrendMicro\Obsidian\Kao_oaK`
-- 環境變數 `VAULT_PATH` 可覆蓋預設路徑
+- Vault 路徑由環境變數 `VAULT_PATH` 指定（必填，參考 `.env.example`）
 
 ## 啟動
 
 **Windows：** PowerShell Constrained Language Mode 會擋住 `npm run dev`，請改用：
 
 ```bat
-cd "D:\OneDrive - TrendMicro\Claude Code\02_note-viewer"
+cd "path\to\02_note-viewer"
 start.bat
 ```
 
