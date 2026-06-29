@@ -3,7 +3,7 @@ import { Star, Search } from 'lucide-react'
 
 const CATEGORY_META = {
   'Workday':           { icon: '🏢', accent: '#60a5fa', bg: 'rgba(96,165,250,0.08)',   border: 'rgba(96,165,250,0.18)',  desc: 'EA 設定、BP 流程、Integration、Payroll' },
-  'Azure Data Explorer': { icon: '📊', accent: '#3ecf8e', bg: 'rgba(62,207,142,0.08)', border: 'rgba(62,207,142,0.18)', desc: '資料查詢、ETL、Kusto 語法' },
+  'Azure':              { icon: '📊', accent: '#3ecf8e', bg: 'rgba(62,207,142,0.08)',  border: 'rgba(62,207,142,0.18)',  desc: '資料查詢、ETL、Kusto 語法' },
   'Power_Automate':    { icon: '⚡', accent: '#f5a623', bg: 'rgba(245,166,35,0.08)',   border: 'rgba(245,166,35,0.18)',  desc: '自動化流程、寄信、觸發設定' },
   'Claude Code':       { icon: '🤖', accent: '#818cf8', bg: 'rgba(129,140,248,0.08)',  border: 'rgba(129,140,248,0.18)', desc: 'Skills、MCP、Session 筆記' },
   'MCP':               { icon: '🔌', accent: '#f472b6', bg: 'rgba(244,114,182,0.08)',  border: 'rgba(244,114,182,0.18)', desc: 'Model Context Protocol 整合設定' },

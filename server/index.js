@@ -637,7 +637,7 @@ app.delete('/api/pdf', (req, res) => {
 // SPA fallback — must be after all API routes
 if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '..', 'dist')
-  app.get('*', (_req, res) => res.sendFile(path.join(distPath, 'index.html')))
+  app.get('/{*splat}', (_req, res) => res.sendFile(path.join(distPath, 'index.html')))
 }
 
 const PORT = process.env.PORT || 3001
