@@ -20,14 +20,13 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(distPath))
 }
 
-function getDefaultVaultPath() {
-  if (process.platform === 'win32') {
-    return 'D:\\OneDrive - TrendMicro\\Obsidian\\Kao_oaK'
-  }
-  return '/Users/kao_oak/Library/CloudStorage/OneDrive-TrendMicro/Obsidian/Kao_oaK'
+if (!process.env.VAULT_PATH) {
+  console.error('ERROR: VAULT_PATH environment variable is required.')
+  console.error('Copy .env.example to .env and set your vault path.')
+  process.exit(1)
 }
 
-const VAULT_PATH = process.env.VAULT_PATH || getDefaultVaultPath()
+const VAULT_PATH = process.env.VAULT_PATH
 
 // 讓前端可以載入 vault 裡的 HTML 檔案（_html\ 資料夾）
 app.use('/vault', express.static(VAULT_PATH))
