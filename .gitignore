@@ -15,6 +15,7 @@ dist-ssr
 .DS_Store
 .claude/
 *-KAO's MAC.*
+CLAUDE.md
 
 # Editor directories and files
 .vscode/*
