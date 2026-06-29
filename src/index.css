@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import 'highlight.js/styles/github-dark.css';
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* ── VitePress official dark tokens ── */
+  --vp-c-bg:          #1b1b1f;
+  --vp-c-bg-alt:      #161618;
+  --vp-c-bg-elv:      #202127;
+  --vp-c-bg-soft:     #26262b;
+
+  --vp-c-text-1:      rgba(255,255,255,0.86);
+  --vp-c-text-2:      rgba(235,235,245,0.60);
+  --vp-c-text-3:      rgba(235,235,245,0.38);
+
+  --vp-c-divider:     rgba(82,82,89,0.48);
+  --vp-c-gutter:      #000;
+
+  --vp-c-brand-1:     #5672cd;
+  --vp-c-brand-2:     #6a84d6;
+  --vp-c-brand-3:     #7c93f0;
+  --vp-c-brand-soft:  rgba(86,114,205,0.14);
+  --vp-c-brand-mute:  rgba(86,114,205,0.08);
+
+  /* Layout */
+  --sidebar-w:        272px;
+  --vp-nav-height:    64px;
+
+  /* Legacy aliases (used by App.jsx inline styles) */
+  --bg-deep:    var(--vp-c-bg-alt);
+  --bg-base:    var(--vp-c-bg);
+  --bg-elevated:var(--vp-c-bg-elv);
+  --fg:         var(--vp-c-text-1);
+  --fg-muted:   var(--vp-c-text-2);
+  --fg-subtle:  var(--vp-c-text-3);
+  --accent:     var(--vp-c-brand-1);
+  --accent-bright: var(--vp-c-brand-3);
+  --accent-glow: rgba(86,114,205,0.25);
+  --accent-bg:  var(--vp-c-brand-soft);
+  --border:     var(--vp-c-divider);
+  --border-hover: rgba(82,82,89,0.78);
+  --nav-active-border: var(--vp-c-brand-1);
+  --nav-active-bg: var(--vp-c-brand-soft);
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+/* ── Prose (note content) ── */
+.prose {
+  line-height: 1.75;
+  color: var(--vp-c-text-2);
+  font-size: 0.9375rem;
+}
+.prose h1,.prose h2,.prose h3,.prose h4 {
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+  margin: 1.75em 0 0.6em;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+.prose h1 { display: none; }
+.prose h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px solid var(--vp-c-divider);
+  padding-bottom: 0.5em;
+  margin-top: 2em;
+}
+.prose h3 { font-size: 1.05rem; }
+.prose p { margin-bottom: 1em; }
+.prose a { color: var(--vp-c-brand-3); text-decoration: none; }
+.prose a:hover { text-decoration: underline; }
+.prose code {
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85em;
+  background: rgba(255,255,255,0.06);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: #a5b4fc;
+}
+.prose pre {
+  background: #161b22;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 1.2em 1.4em;
+  overflow-x: auto;
+  margin: 1.25em 0;
+}
+.prose pre code { background: none; padding: 0; color: #c4c8d8; font-size: 0.8125rem; }
+.prose ul, .prose ol { padding-left: 1.5em; margin-bottom: 1em; }
+.prose li { margin-bottom: 0.3em; }
+.prose blockquote {
+  border-left: 3px solid var(--vp-c-brand-1);
+  padding-left: 1em;
+  color: var(--vp-c-text-3);
+  margin: 1.25em 0;
+  font-style: italic;
+}
+.prose table { width: 100%; border-collapse: collapse; margin: 1.25em 0; font-size: 0.875rem; }
+.prose th { background: rgba(255,255,255,0.04); color: var(--vp-c-text-1); font-weight: 600; text-align: left; padding: 0.6em 0.9em; border: 1px solid var(--vp-c-divider); }
+.prose td { padding: 0.6em 0.9em; border: 1px solid var(--vp-c-divider); }
+.prose hr { border: none; border-top: 1px solid var(--vp-c-divider); margin: 2em 0; }
+.prose img { max-width: 100%; border-radius: 8px; margin: 1em 0; }
+.prose strong { color: var(--vp-c-text-1); font-weight: 600; }
+
+select option { background: var(--vp-c-bg-alt); color: var(--vp-c-text-1); }
+
+@keyframes float  { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-20px) rotate(1deg)} }
+@keyframes float2 { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(15px) rotate(-1deg)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
