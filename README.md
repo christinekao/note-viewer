@@ -1,16 +1,48 @@
-# React + Vite
+# note-viewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal Obsidian vault viewer with a VitePress-style dark UI. Built with React + Express.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+cp .env.example .env
+# Edit .env and set your VAULT_PATH
+```
 
-## React Compiler
+## Run with Docker (recommended)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+docker compose up --build -d
+```
 
-## Expanding the ESLint configuration
+Open http://localhost:3001
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Run in dev mode
+
+```bash
+npm install
+npm run dev
+```
+
+- Express: http://localhost:3001
+- Vite: http://localhost:5173
+
+## API
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | /api/notes | List all notes (with frontmatter) |
+| GET | /api/note?path= | Get single note content |
+| GET | /api/search?q= | Full-text search (max 30 results) |
+| POST | /api/note/create | Create note `{ folder, title, tags }` |
+| PUT | /api/note/save | Save content (preserves frontmatter) |
+| PUT | /api/note/rename | Rename note (syncs MD + HTML + PDFs + frontmatter) |
+| PUT | /api/note/move | Move note to another folder |
+| PUT | /api/note/tags | Update tags only |
+| DELETE | /api/note?path= | Delete note |
+| GET | /api/pins | Get pinned notes |
+| POST | /api/pins/toggle | Toggle pin `{ path }` |
+| GET | /api/categories | Get dynamic category metadata |
+| POST | /api/folder/create | Create folder with icon `{ folder, icon, desc }` |
+| POST | /api/note/export-html | Export note to `_html/` |
+| GET | /api/note/has-html | Check if note has HTML version |
