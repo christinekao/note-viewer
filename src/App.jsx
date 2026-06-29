@@ -25,6 +25,7 @@ export default function App() {
   const [sidebarW, setSidebarW] = useState(SIDEBAR_DEFAULT)
   const [headings, setHeadings] = useState([])
   const [activeHeading, setActiveHeading] = useState(null)
+  const [htmlVersion, setHtmlVersion] = useState(0)
   const [editing, setEditing] = useState(false)
 
   // PDF
@@ -168,10 +169,11 @@ export default function App() {
       body: JSON.stringify({ path: noteContent.path, content }),
     })
     const updated = await res.json()
+    if (updated.error) { showToast(updated.error, 'err'); return }
     setNoteContent(updated)
     setEditing(false)
     loadNotes()
-  }, [noteContent, loadNotes])
+  }, [noteContent, loadNotes, showToast])
 
   const handleRename = useCallback(async () => {
     if (!dialogInput.trim() || !noteContent) return
@@ -395,6 +397,7 @@ export default function App() {
               pins={pins}
               onTogglePin={togglePin}
               onSelect={openNote}
+              onMoveNote={handleMove}
             />
           ) : (
             <NoteView
@@ -409,6 +412,7 @@ export default function App() {
               headings={headings}
               activeHeading={activeHeading}
               onNoteUpdate={(updated) => { setNoteContent(updated); loadNotes() }}
+              htmlVersion={htmlVersion}
             />
           )}
         </div>
@@ -453,9 +457,32 @@ export default function App() {
 
       {dialog?.type === 'addTag' && (() => {
         const commitAddTag = async () => {
-          const tag = dialogInput.trim()
+          const tag = dialogInput.trim().toLowerCase()
           if (!tag || !noteContent) return
-          await handleSave(noteContent.content + `\n#${tag}`)
+          const existingTags = noteContent.tags || []
+          if (existingTags.includes(tag)) { showToast(`#${tag} 已存在`); setDialog(null); return }
+          const newTags = [...existingTags, tag]
+          const res = await fetch(`${API}/api/note/tags`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ path: noteContent.path, tags: newTags }),
+          })
+          const updated = await res.json()
+          if (updated.error) { showToast(updated.error, 'err'); return }
+          setNoteContent(prev => ({ ...prev, tags: updated.tags }))
+          loadNotes()
+          showToast(`#${tag} 已加入`)
+          // 若有 HTML 版本，同步更新（custom HTML 只改 tag chips，auto HTML 重新產生）
+          fetch(`${API}/api/note/has-html?path=${encodeURIComponent(noteContent.path)}`)
+            .then(r => r.json())
+            .then(({ exists }) => {
+              if (!exists) return
+              fetch(`${API}/api/note/export-html`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ path: noteContent.path }),
+              }).then(() => setHtmlVersion(v => v + 1))
+            })
           setDialog(null)
         }
         return (

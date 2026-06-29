@@ -347,6 +347,7 @@ app.get('/api/note/has-html', (req, res) => {
 
   // 1. 先讀 frontmatter 的 html: 欄位
   let htmlRel = null
+  let isCustomHtml = false
   try {
     const mdFull = path.join(VAULT_PATH, mdPath)
     if (fs.existsSync(mdFull)) {
@@ -356,6 +357,7 @@ app.get('/api/note/has-html', (req, res) => {
         const resolved = `${dir}/${data.html}`.replace(/\/\.\//g, '/').replace(/\\/g, '/')
         if (fs.existsSync(path.join(VAULT_PATH, resolved))) {
           htmlRel = resolved
+          isCustomHtml = true
         }
       }
     }
@@ -378,7 +380,7 @@ app.get('/api/note/has-html', (req, res) => {
       content.includes('class="nav-brand"') || content.includes("class='nav-brand'") ||
       content.includes('class="nav-section"') || content.includes("class='nav-section'")
   } catch {}
-  res.json({ exists: true, hasSidebar, url: `/vault/${htmlRel}` })
+  res.json({ exists: true, hasSidebar, isCustomHtml, url: `/vault/${htmlRel}` })
 })
 
 // ── Categories ────────────────────────────────────────────────────────────────
@@ -578,10 +580,31 @@ function buildHtml(note) {
 app.post('/api/note/export-html', (req, res) => {
   const { path: relPath } = req.body
   try {
-    safeResolvePath(relPath) // validate before proceeding
-    const note = noteFromFile(relPath)
+    safeResolvePath(relPath)
+    const mdFull = path.join(VAULT_PATH, relPath)
+    const { data } = matter(fs.readFileSync(mdFull, 'utf8'))
     const dir = path.dirname(relPath).replace(/\\/g, '/')
     const basename = path.basename(relPath, '.md')
+
+    // custom HTML: 只更新 tag chips，不覆蓋整個檔案
+    if (data.html) {
+      const htmlFull = path.join(VAULT_PATH, data.html)
+      if (fs.existsSync(htmlFull)) {
+        const tags = (data.tags || []).filter(t => !['notes', 'sop', 'instruction'].includes(t))
+        const chipsHtml = tags.map(t => `<span class="tag-chip">${t}</span>`).join('\n    ')
+        let html = fs.readFileSync(htmlFull, 'utf8')
+        // 替換連續的 tag-chip span 區塊（允許換行與空白）
+        html = html.replace(
+          /(<span class="tag-chip">[\s\S]*?<\/span>\s*)+/g,
+          chipsHtml + '\n    '
+        )
+        fs.writeFileSync(htmlFull, html, 'utf8')
+        return res.json({ ok: true, url: `/vault/${data.html}` })
+      }
+    }
+
+    // auto HTML: 全部重新產生
+    const note = noteFromFile(relPath)
     const htmlDir = safeResolvePath(`${dir}/_html`)
     const htmlRel = `${dir}/_html/${basename}.html`
     fs.mkdirSync(htmlDir, { recursive: true })
